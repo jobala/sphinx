@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 4.2)
+project(sphinx VERSION 0.1 LANGUAGES CXX)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT CMAKE_CXX_COMPILER MATCHES "/usr/bin")
+  add_link_options("-fuse-ld=lld")
+endif()
+
+option(ENABLE_SANITIZERS "Enable ASan and UBSan" OFF)
+if(ENABLE_SANITIZERS)
+  add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=address,undefined)
+endif()
+
+option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
+if(ENABLE_TSAN)
+  add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=thread)
+endif()
+
+enable_testing()
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+list (APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+add_subdirectory(lib/planner)
+add_subdirectory(test)
+
+
+add_executable(sphinx src/main.cpp)
+target_link_libraries(sphinx PUBLIC planner)
+

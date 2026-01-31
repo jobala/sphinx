@@ -1,0 +1,2 @@
+add_library(planner planner.cpp)
+target_include_directories(planner PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
