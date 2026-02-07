@@ -1,12 +1,12 @@
 #include <iostream>
 #include <planner.h>
 
-int main() {
+auto main() -> int {
   Greeter greeter;
 
   greeter.say_hello("Japheth");
   greeter.say_hello("World");
 
-  std::cout << "Hello! " << std::endl;
+  std::cout << "Hello! " << "\n";
   std::cout << "Hello, world!";
 }
