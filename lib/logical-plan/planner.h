@@ -2,8 +2,7 @@
 
 #include <string>
 
-class Greeter
-{
+class Greeter {
 public:
   void say_hello(std::string name);
 };

@@ -30,10 +30,11 @@ enable_testing()
 find_package(Arrow REQUIRED)
 
 
-add_subdirectory(lib/logical-plan)
 add_subdirectory(lib/types)
+add_subdirectory(lib/datasource)
+add_subdirectory(lib/logical-plan)
 add_subdirectory(test)
 
 
 add_executable(sphinx src/main.cpp)
-target_link_libraries(sphinx PRIVATE logical_plan types)
+target_link_libraries(sphinx PRIVATE types datasource logical_plan )
