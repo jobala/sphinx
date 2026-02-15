@@ -2,19 +2,16 @@
 #include <any>
 #include <memory>
 
-ArrowFieldVector::ArrowFieldVector(std::shared_ptr<arrow::Array> &field_arr)
-    : field_arr(field_arr) {}
+ArrowFieldVector::ArrowFieldVector(std::shared_ptr<arrow::Array> &field_arr) : field_arr(field_arr) {}
 
-auto ArrowFieldVector::GetType() -> arrow::Type::type {
-  return field_arr->type_id();
-}
+auto ArrowFieldVector::GetType() -> arrow::Type::type { return field_arr->type_id(); }
 
-auto ArrowFieldVector::Size() -> int {
-  return static_cast<int>(field_arr->length());
-}
+auto ArrowFieldVector::Size() -> int { return static_cast<int>(field_arr->length()); }
 
-auto ArrowFieldVector::GetValue(int idx) -> std::any {
-  switch (field_arr->type_id()) {
+auto ArrowFieldVector::GetValue(int idx) -> std::any
+{
+  switch (field_arr->type_id())
+  {
   case arrow::Type::BOOL: {
     auto bool_array = std::static_pointer_cast<arrow::BooleanArray>(field_arr);
     return bool_array->Value(idx);
