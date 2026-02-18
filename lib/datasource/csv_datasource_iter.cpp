@@ -1,13 +1,14 @@
-#include "datasource.h"
-#include "types.h"
 #include <memory>
 #include <vector>
 
+#include "csv_datasource_iter.h"
+#include "types.h"
+
 template <typename T>
-auto CsvDatasourceIterator<T>::next() -> std::unique_ptr<T>
+auto CsvDatasourceIterator<T>::next() -> T
 {
   auto fields = std::vector<std::shared_ptr<ColumnVector>>();
-  return std::make_unique<T>(schema_, fields);
+  return {schema_, fields};
 }
 
 template <typename T>

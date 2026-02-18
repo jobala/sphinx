@@ -12,6 +12,7 @@ BraceWrapping:
   AfterStruct: true
   BeforeElse: true
   IndentBraces: false
+  AfterCaseLabel: true
 
 IndentWidth: 2
 ColumnLimit: 120
