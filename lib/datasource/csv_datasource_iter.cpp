@@ -1,6 +1,8 @@
+#include <exception>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "csv_datasource_iter.h"
@@ -13,37 +15,68 @@ CsvDatasourceIterator<T>::CsvDatasourceIterator(std::ifstream &file, std::shared
 template <typename T>
 auto CsvDatasourceIterator<T>::next() -> T
 {
-  /*
-   * 1. Read BATCH_SIZE lines or untile end of file
-   * 2. Assume all columns are of type string
-   * 3. Does getline remember file position?
-   *
-   * */
+  std::unordered_map<std::string, std::vector<String>> columns;
+  std::vector<ColumnVector> cols;
+  for (auto const &field : schema_->fields())
+  {
+    std::string idx;
+    auto status = field->metadata()->Get("idx").Value(&idx);
+    columns.insert({idx, {}});
+  }
+
   int read_lines = 0;
   while (read_lines < batch_size_)
   {
     std::string row;
     std::getline(file_, row);
+    auto row_items = extract_row_items(row);
+
+    for (int i = 0; i < int(row_items.size()); i++)
+    {
+      try
+      {
+        columns.at(std::to_string(i)).push_back(row_items.at(i));
+      } catch (const std::exception &e)
+      {
+        continue;
+      }
+    }
     read_lines += 1;
   }
 
-  auto fields = std::vector<std::shared_ptr<ColumnVector>>();
-  return {schema_, fields};
+  std::vector<ArrowFieldVector> field_vectors;
+  for (auto const &field : schema_->fields())
+  {
+    std::string idx;
+    auto status = field->metadata()->Get("idx").Value(&idx);
+
+    auto const &items = columns.at(idx);
+
+    arrow::StringBuilder builder;
+    auto appen_status = builder.AppendValues(items);
+    std::shared_ptr<arrow::Array> array;
+    auto stat = builder.Finish().Value(&array);
+
+    ArrowFieldVector field_vector(array);
+    field_vectors.push_back(field_vector);
+  }
+
+  return {schema_, field_vectors};
 }
 
 template <typename T>
-auto CsvDatasourceIterator<T>::extract_fields(const std::string &row) -> std::vector<std::shared_ptr<arrow::Field>>
+auto CsvDatasourceIterator<T>::extract_row_items(const std::string &row) -> std::vector<String>
 {
   std::stringstream sstream(row);
-  std::string field_item;
-  std::vector<std::shared_ptr<arrow::Field>> fields;
+  std::vector<std::string> items;
+  std::string item;
 
-  while (std::getline(sstream, field_item, ','))
+  while (std::getline(sstream, item, ','))
   {
-    auto field = arrow::field(field_item, ArrowTypes::StringType);
+    items.push_back(item);
   }
 
-  return fields;
+  return items;
 }
 
 template <typename T>

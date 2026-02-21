@@ -23,7 +23,7 @@ class CsvDatasourceIterator : public Iterator<T>
   int batch_size_ = 100;
   std::ifstream &file_;
   std::shared_ptr<Schema> schema_;
-  auto extract_fields(const std::string &row) -> std::vector<std::shared_ptr<arrow::Field>>;
+  auto extract_row_items(const std::string &row) -> std::vector<String>;
 
 public:
   CsvDatasourceIterator(std::ifstream &file, std::shared_ptr<Schema> schema);

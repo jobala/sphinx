@@ -56,7 +56,7 @@ auto CsvDatasource::create_final_schema(const std::vector<String> &projection) -
     auto field = schema->fields()[i];
     if (std::ranges::contains(projection, field->name()))
     {
-      auto meta = std::unordered_map<std::string, std::string>{{"pos", std::to_string(i)}};
+      auto meta = std::unordered_map<std::string, std::string>{{"idx", std::to_string(i)}};
       auto metadata = std::make_shared<arrow::KeyValueMetadata>(meta);
       auto field_with_meta = field->WithMetadata(metadata);
       projected_fields.push_back(field_with_meta);
