@@ -43,6 +43,4 @@ TEST(Datasource, uses_provided_schema)
   }
 }
 
-TEST(Datasource, projects_selected_columns) {}
-TEST(Datasource, handles_missing_csv_file) {}
-TEST(Datasource, handles_invalid_csv_file) {}
+TEST(Datasource, returns_selected_columns) {}

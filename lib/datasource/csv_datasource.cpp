@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "csv_datasource_iter.h"
@@ -49,11 +50,16 @@ auto CsvDatasource::create_final_schema(const std::vector<String> &projection) -
     throw std::runtime_error("error creating final schema");
   }
 
-  for (auto const &field : schema_.value()->fields())
+  auto schema = schema_.value();
+  for (int i = 0; i < int(schema->fields().size()); i++)
   {
+    auto field = schema->fields()[i];
     if (std::ranges::contains(projection, field->name()))
     {
-      projected_fields.push_back(field);
+      auto meta = std::unordered_map<std::string, std::string>{{"pos", std::to_string(i)}};
+      auto metadata = std::make_shared<arrow::KeyValueMetadata>(meta);
+      auto field_with_meta = field->WithMetadata(metadata);
+      projected_fields.push_back(field_with_meta);
     }
   }
 

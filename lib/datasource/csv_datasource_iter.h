@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 
-#define BATCH_SIZE 100;
 using Schema = arrow::Schema;
 using String = std::string;
 
@@ -21,12 +20,13 @@ template <typename T>
 class CsvDatasourceIterator : public Iterator<T>
 {
   int position_ = 0;
+  int batch_size_ = 100;
   std::ifstream &file_;
   std::shared_ptr<Schema> schema_;
+  auto extract_fields(const std::string &row) -> std::vector<std::shared_ptr<arrow::Field>>;
 
 public:
-  CsvDatasourceIterator(std::ifstream &file, std::shared_ptr<Schema> schema)
-      : file_(file), schema_(std::move(schema)) {};
+  CsvDatasourceIterator(std::ifstream &file, std::shared_ptr<Schema> schema);
 
   bool has_next() override;
   T next() override;
@@ -34,7 +34,7 @@ public:
 
   CsvDatasourceIterator<T> &operator++()
   {
-    ++position_;
+    position_ += batch_size_;
     return *this;
   }
 
