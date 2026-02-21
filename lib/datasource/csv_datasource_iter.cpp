@@ -25,7 +25,7 @@ auto CsvDatasourceIterator<T>::next() -> T
   }
 
   int read_lines = 0;
-  while (read_lines < batch_size_)
+  while (read_lines < batch_size_ && !file_.eof())
   {
     std::string row;
     std::getline(file_, row);
@@ -41,6 +41,7 @@ auto CsvDatasourceIterator<T>::next() -> T
         continue;
       }
     }
+
     read_lines += 1;
   }
 
@@ -82,7 +83,7 @@ auto CsvDatasourceIterator<T>::extract_row_items(const std::string &row) -> std:
 template <typename T>
 auto CsvDatasourceIterator<T>::has_next() -> bool
 {
-  return file_.eof();
+  return !file_.eof();
 }
 
 template class CsvDatasourceIterator<RecordBatch>;

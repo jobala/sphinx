@@ -1,5 +1,7 @@
+#include "csv_datasource_iter.h"
 #include "datasource.h"
 #include "types.h"
+#include <any>
 #include <filesystem>
 #include <gtest/gtest.h>
 #include <vector>
@@ -43,4 +45,31 @@ TEST(Datasource, uses_provided_schema)
   }
 }
 
-TEST(Datasource, returns_selected_columns) {}
+TEST(Datasource, returns_selected_columns)
+{
+  std::string file = get_path("with_header.csv");
+  CsvDatasource datasource({}, file);
+  auto iter = datasource.scan(std::vector<String>{"id", "name"});
+
+  ASSERT_EQ(iter->has_next(), true);
+
+  auto record_batch = iter->next();
+  ASSERT_EQ(record_batch.RowCount(), 5);
+  ASSERT_EQ(record_batch.ColumnCount(), 2);
+
+  std::vector<std::string> ids{"1", "2", "3", "4", "5"};
+  std::vector<std::string> names{"Alice", "Bob", "Carol", "David", "Eve"};
+
+  for (int i = 0; i < record_batch.RowCount(); i++)
+  {
+    auto user_id = std::any_cast<std::string>(record_batch.GetField(0)->GetValue(i));
+    auto user_name = std::any_cast<std::string>(record_batch.GetField(1)->GetValue(i));
+
+    ASSERT_EQ(user_id, ids[i]);
+    ASSERT_EQ(user_name, names[i]);
+  }
+}
+
+TEST(Datasource, handle_missing_value) {}
+
+TEST(Datasource, handle_different_column_types) {}
