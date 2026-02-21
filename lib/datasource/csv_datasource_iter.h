@@ -21,11 +21,11 @@ template <typename T>
 class CsvDatasourceIterator : public Iterator<T>
 {
   int position_ = 0;
-  std::ifstream *file_;
+  std::ifstream &file_;
   std::shared_ptr<Schema> schema_;
 
 public:
-  CsvDatasourceIterator(std::ifstream *file, std::shared_ptr<Schema> schema)
+  CsvDatasourceIterator(std::ifstream &file, std::shared_ptr<Schema> schema)
       : file_(file), schema_(std::move(schema)) {};
 
   bool has_next() override;

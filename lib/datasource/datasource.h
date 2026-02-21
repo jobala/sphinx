@@ -29,11 +29,7 @@ class CsvDatasource : public Datasource
   std::ifstream file_;
 
 public:
-  CsvDatasource(std::optional<std::shared_ptr<Schema>> schema, const String &file_name)
-      : schema_(std::move(schema)), file_(file_name)
-  {
-    final_schema_ = schema_.value_or(this->infer_schema());
-  };
+  CsvDatasource(std::optional<std::shared_ptr<Schema>> schema, const String &file_name);
 
   std::shared_ptr<Schema> schema() override;
   DatasourceIterator scan(const std::vector<String> &project) override;

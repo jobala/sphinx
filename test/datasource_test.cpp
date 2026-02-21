@@ -1,7 +1,6 @@
 #include "datasource.h"
 #include <filesystem>
 #include <gtest/gtest.h>
-#include <iostream>
 
 auto get_path(const std::string &file_name) -> std::string
 {
@@ -9,17 +8,23 @@ auto get_path(const std::string &file_name) -> std::string
   return cwd.parent_path().append("data").append("csv").append(file_name);
 }
 
-TEST(Datasource, can_infer_schema)
+TEST(Datasource, infers_schema_from_csv_headers)
 {
   std::string file = get_path("with_header.csv");
   CsvDatasource datasource({}, file);
 
   auto schema = datasource.schema();
   ASSERT_EQ(schema->fields().size(), 3);
+
+  std::vector<std::string> csv_headers{"id", "name", "score"};
+  for (int i = 0; i < static_cast<int>(schema->fields().size()); i++)
+  {
+    auto arrow_field = schema->fields()[i];
+    ASSERT_EQ(csv_headers[i], arrow_field->name());
+  }
 }
 
-TEST(Datasource, handles_csv_with_missing_values) {}
-TEST(Datasource, respects_provided_schema) {}
+TEST(Datasource, uses_provided_schema) {}
 TEST(Datasource, projects_selected_columns) {}
 TEST(Datasource, handles_missing_csv_file) {}
 TEST(Datasource, handles_invalid_csv_file) {}
