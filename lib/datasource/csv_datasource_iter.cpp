@@ -44,7 +44,7 @@ auto CsvDatasourceIterator<T>::next() -> T
     read_lines += 1;
   }
 
-  std::vector<ArrowFieldVector> field_vectors;
+  std::vector<std::shared_ptr<ColumnVector>> field_vectors;
   for (auto const &field : schema_->fields())
   {
     std::string idx;
@@ -57,7 +57,7 @@ auto CsvDatasourceIterator<T>::next() -> T
     std::shared_ptr<arrow::Array> array;
     auto stat = builder.Finish().Value(&array);
 
-    ArrowFieldVector field_vector(array);
+    auto field_vector = std::make_shared<ArrowFieldVector>(array);
     field_vectors.push_back(field_vector);
   }
 

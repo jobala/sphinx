@@ -47,7 +47,7 @@ public:
   int Size() override;
 };
 
-class LiteralValueVector : ColumnVector
+class LiteralValueVector : public ColumnVector
 {
   arrow::Type::type arrowType;
   std::any value;
