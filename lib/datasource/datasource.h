@@ -26,6 +26,7 @@ class CsvDatasource : public Datasource
   std::optional<std::shared_ptr<Schema>> schema_;
   std::shared_ptr<Schema> final_schema_;
   std::shared_ptr<Schema> infer_schema();
+  std::shared_ptr<Schema> create_final_schema(const std::vector<String> &projection);
   std::ifstream file_;
 
 public:
