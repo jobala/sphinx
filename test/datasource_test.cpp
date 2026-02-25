@@ -68,8 +68,10 @@ TEST(Datasource, returns_selected_columns)
     ASSERT_EQ(user_id, ids[i]);
     ASSERT_EQ(user_name, names[i]);
   }
+
+  ASSERT_EQ(iter->has_next(), false);
 }
 
-TEST(Datasource, handle_missing_value) {}
+TEST(Datasource, handle_missing_values) {}
 
 TEST(Datasource, handle_different_column_types) {}
