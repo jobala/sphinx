@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <exception>
 #include <memory>
 #include <sstream>
@@ -83,7 +84,7 @@ auto CsvDatasourceIterator<T>::extract_row_items(const std::string &row) -> std:
 template <typename T>
 auto CsvDatasourceIterator<T>::has_next() -> bool
 {
-  return !file_.eof();
+  return file_.peek() != EOF;
 }
 
 template class CsvDatasourceIterator<RecordBatch>;

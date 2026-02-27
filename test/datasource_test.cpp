@@ -72,6 +72,6 @@ TEST(Datasource, returns_selected_columns)
   ASSERT_EQ(iter->has_next(), false);
 }
 
-TEST(Datasource, handle_missing_values) {}
+TEST(Datasource, handle_missing_values) { GTEST_SKIP() << "TODO: handle missing values in CSV document"; }
 
-TEST(Datasource, handle_different_column_types) {}
+TEST(Datasource, handle_different_column_types) { GTEST_SKIP() << "TODO: handle different column types"; }

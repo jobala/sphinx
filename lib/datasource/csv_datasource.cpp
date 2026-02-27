@@ -14,6 +14,11 @@
 CsvDatasource::CsvDatasource(std::optional<std::shared_ptr<Schema>> schema, const String &file_name)
     : schema_(std::move(schema)), file_(file_name)
 {
+  if (!file_.is_open() || !file_.good())
+  {
+    throw std::runtime_error("error opening csv file for reading");
+  }
+
   schema_ = schema_.value_or(this->infer_schema());
 };
 

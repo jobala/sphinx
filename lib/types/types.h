@@ -49,22 +49,27 @@ public:
 
 class LiteralValueVector : public ColumnVector
 {
-  arrow::Type::type arrowType;
-  std::any value;
-  int size;
+  arrow::Type::type arrowType_;
+  std::any value_;
+  int size_;
 
 public:
-  arrow::Type::type GetType() override { return arrowType; };
+  LiteralValueVector(arrow::Type::type arrowType, std::any &value, int size)
+      : arrowType_(arrowType), value_(value), size_(size)
+  {
+  }
+
+  arrow::Type::type GetType() override { return arrowType_; };
   std::any GetValue(int idx) override
   {
-    if (idx < 0 || idx >= size)
+    if (idx < 0 || idx >= size_)
     {
       throw std::runtime_error("index out of bounds");
     }
-    return value;
+    return value_;
   }
 
-  int Size() override { return size; };
+  int Size() override { return size_; };
 };
 
 // todo: add tests for record batch construction
@@ -80,7 +85,15 @@ public:
     this->fields = std::move(fields);
   }
 
-  auto RowCount() -> int { return fields[0]->Size(); }
+  auto RowCount() -> int
+  {
+    if (fields.empty())
+    {
+      return 0;
+    }
+
+    return fields[0]->Size();
+  }
 
   auto ColumnCount() -> int { return static_cast<int>(fields.size()); }
 
