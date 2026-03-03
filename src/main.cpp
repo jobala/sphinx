@@ -1,12 +1,10 @@
+
 #include <iostream>
-#include <planner.h>
 
-auto main() -> int {
-  Greeter greeter;
+#include "logical_plan.h"
 
-  greeter.say_hello("Japheth");
-  greeter.say_hello("World");
-
+auto main() -> int
+{
   std::cout << "Hello! " << "\n";
   std::cout << "Hello, world!";
 }
