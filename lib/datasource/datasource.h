@@ -19,6 +19,7 @@ public:
   virtual ~Datasource() = default;
   virtual std::shared_ptr<Schema> schema() = 0;
   virtual DatasourceIterator scan(const std::vector<String> &project) = 0;
+  virtual std::shared_ptr<Schema> create_final_schema(const std::vector<String> &project) = 0;
 };
 
 class CsvDatasource : public Datasource
@@ -26,7 +27,6 @@ class CsvDatasource : public Datasource
   std::optional<std::shared_ptr<Schema>> schema_;
   std::shared_ptr<Schema> final_schema_;
   std::shared_ptr<Schema> infer_schema();
-  std::shared_ptr<Schema> create_final_schema(const std::vector<String> &projection);
   std::ifstream file_;
 
 public:
@@ -34,4 +34,5 @@ public:
 
   std::shared_ptr<Schema> schema() override;
   DatasourceIterator scan(const std::vector<String> &project) override;
+  std::shared_ptr<Schema> create_final_schema(const std::vector<String> &projection) override;
 };
