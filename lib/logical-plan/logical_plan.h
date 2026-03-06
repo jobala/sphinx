@@ -1,6 +1,8 @@
 #pragma once
 
 #include <arrow/api.h>
+#include <memory>
+#include <string>
 #include <vector>
 
 class LogicalPlan
@@ -16,5 +18,5 @@ class LogicalExpr
 {
 public:
   virtual ~LogicalExpr() = default;
-  virtual arrow::Field to_field();
+  virtual arrow::Field to_field() = 0;
 };

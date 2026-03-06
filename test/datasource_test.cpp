@@ -9,7 +9,7 @@
 auto get_path(const std::string &file_name) -> std::string
 {
   std::filesystem::path cwd(__FILE__);
-  return cwd.parent_path().append("data").append("csv").append(file_name);
+  return cwd.parent_path().append("data").append("csv").append(file_name).string();
 }
 
 TEST(Datasource, infers_schema_from_csv_headers)
