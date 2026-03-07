@@ -13,7 +13,7 @@ auto Projection::schema() -> std::shared_ptr<arrow::Schema>
   std::vector<std::shared_ptr<arrow::Field>> fields(expr_.size());
   for (auto &exp : expr_)
   {
-    fields.push_back(exp->to_field());
+    fields.push_back(exp->to_field(input_));
   }
 
   return arrow::schema(fields);
@@ -30,7 +30,7 @@ auto Projection::to_string() -> std::string
 
   for (auto &exp : expr_)
   {
-    columns.append(exp->to_field()->name());
+    columns.append(exp->to_field(input_)->name());
   }
 
   return std::format("Project: {}", columns);
