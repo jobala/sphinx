@@ -1,6 +1,8 @@
 #include "../logical_plan.h"
 #include <memory>
 
+#define COLUMN_NOT_FOUND "column not found"
+
 class Column : public LogicalExpr
 {
   std::string name_;

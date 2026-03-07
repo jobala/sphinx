@@ -20,7 +20,7 @@ auto Column::to_field(std::shared_ptr<LogicalPlan> &input) -> std::shared_ptr<ar
 
   if (!field.has_value())
   {
-    throw std::runtime_error("invalid column name");
+    throw std::runtime_error(COLUMN_NOT_FOUND);
   }
 
   return field.value();

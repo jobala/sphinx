@@ -79,3 +79,24 @@ TEST(LogicalPlan, projects_selected_columns)
   Projection projection(scan_plan, expressions);
   ASSERT_EQ("Projection: score ", projection.to_string());
 }
+
+TEST(LogicalPlan, throws_error_for_non_existent_columns)
+{
+  std::string file = get_path("with_header.csv");
+  CsvDatasource datasource({}, file);
+  std::vector<std::string> proj{};
+
+  try
+  {
+    std::string score = "404";
+    auto score_column = std::make_shared<Column>(score);
+    auto scan_plan = std::make_shared<Scan>(file, proj, datasource);
+    std::vector<std::shared_ptr<LogicalExpr>> expressions{score_column};
+
+    Projection projection(scan_plan, expressions);
+
+  } catch (std::runtime_error &err)
+  {
+    EXPECT_STREQ(COLUMN_NOT_FOUND, err.what());
+  }
+}
