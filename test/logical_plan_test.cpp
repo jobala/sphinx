@@ -4,7 +4,10 @@
 #include <memory>
 #include <vector>
 
+#include "column.h"
 #include "datasource.h"
+#include "logical_plan.h"
+#include "projection.h"
 #include "scan.h"
 
 auto get_path(const std::string &file_name) -> std::string
@@ -60,4 +63,19 @@ TEST(LogicalPlan, scan_to_string)
   Scan scan2(file, projection, datasource);
 
   ASSERT_TRUE(scan2.to_string().contains(std::format("projection={}", projection)));
+}
+
+TEST(LogicalPlan, projects_selected_columns)
+{
+  std::string file = get_path("with_header.csv");
+  CsvDatasource datasource({}, file);
+  std::vector<std::string> proj{};
+
+  std::string score = "score";
+  auto score_column = std::make_shared<Column>(score);
+  auto scan_plan = std::make_shared<Scan>(file, proj, datasource);
+  std::vector<std::shared_ptr<LogicalExpr>> expressions{score_column};
+
+  Projection projection(scan_plan, expressions);
+  ASSERT_EQ("Projection: score ", projection.to_string());
 }

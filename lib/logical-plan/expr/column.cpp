@@ -25,3 +25,5 @@ auto Column::to_field(std::shared_ptr<LogicalPlan> &input) -> std::shared_ptr<ar
 
   return field.value();
 }
+
+auto Column::to_string() -> std::string { return name_; }

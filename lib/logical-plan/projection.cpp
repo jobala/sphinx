@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-Projection::Projection(std::shared_ptr<LogicalPlan> &input, std::vector<std::shared_ptr<LogicalExpr>> &expr)
+Projection::Projection(std::shared_ptr<LogicalPlan> input, std::vector<std::shared_ptr<LogicalExpr>> expr)
     : input_(input), expr_(expr)
 {
 }
@@ -30,8 +30,8 @@ auto Projection::to_string() -> std::string
 
   for (auto &exp : expr_)
   {
-    columns.append(exp->to_field(input_)->name());
+    columns.append(exp->to_field(input_)->name() + " ");
   }
 
-  return std::format("Project: {}", columns);
+  return std::format("Projection: {}", columns);
 }
