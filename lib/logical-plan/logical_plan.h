@@ -18,5 +18,5 @@ class LogicalExpr
 {
 public:
   virtual ~LogicalExpr() = default;
-  virtual arrow::Field to_field() = 0;
+  virtual std::shared_ptr<arrow::Field> to_field() = 0;
 };
