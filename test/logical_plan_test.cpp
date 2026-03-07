@@ -94,7 +94,7 @@ TEST(LogicalPlan, throws_error_for_non_existent_columns)
     std::vector<std::shared_ptr<LogicalExpr>> expressions{score_column};
 
     Projection projection(scan_plan, expressions);
-
+    projection.to_string();
   } catch (std::runtime_error &err)
   {
     EXPECT_STREQ(COLUMN_NOT_FOUND, err.what());
