@@ -1,5 +1,7 @@
-#include "logical_plan.h"
+#pragma once
 #include <memory>
+
+#include "logical_plan.h"
 class Selection : public LogicalPlan
 {
   std::shared_ptr<LogicalPlan> input_;

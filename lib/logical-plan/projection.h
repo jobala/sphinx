@@ -1,6 +1,9 @@
-#include "logical_plan.h"
+#pragma once
+
 #include <memory>
 #include <vector>
+
+#include "logical_plan.h"
 
 class Projection : public LogicalPlan
 {

@@ -1,6 +1,7 @@
-#include "../logical_plan.h"
+#pragma once
 #include <memory>
 
+#include "../logical_plan.h"
 #define COLUMN_NOT_FOUND "column not found"
 
 class Column : public LogicalExpr
