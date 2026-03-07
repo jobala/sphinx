@@ -10,7 +10,7 @@ Projection::Projection(std::shared_ptr<LogicalPlan> input, std::vector<std::shar
 }
 auto Projection::schema() -> std::shared_ptr<arrow::Schema>
 {
-  std::vector<std::shared_ptr<arrow::Field>> fields(expr_.size());
+  std::vector<std::shared_ptr<arrow::Field>> fields(0);
   for (auto &exp : expr_)
   {
     fields.push_back(exp->to_field(input_));
