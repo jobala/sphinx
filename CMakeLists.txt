@@ -33,6 +33,7 @@ find_package(Arrow REQUIRED)
 add_subdirectory(lib/types)
 add_subdirectory(lib/datasource)
 add_subdirectory(lib/logical-plan)
+add_subdirectory(lib/sql)
 add_subdirectory(test)
 
 
