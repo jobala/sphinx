@@ -88,7 +88,7 @@ auto SqlTokenizer::scan_identifier(int start_offset) -> Token
 
   auto text = sql_.substr(start_offset, end_offset - start_offset);
   auto token_type = Type::from_string(text);
-  return {text, token_type, end_offset + 1};
+  return {text, token_type, end_offset};
 }
 
 auto SqlTokenizer::scan_symbol(int start_offset) -> Token
@@ -101,7 +101,7 @@ auto SqlTokenizer::scan_symbol(int start_offset) -> Token
 
   auto text = sql_.substr(start_offset, end_offset - start_offset);
   auto token_type = Type::from_string(text);
-  return {text, token_type, end_offset + 1};
+  return {text, token_type, end_offset};
 }
 
 auto SqlTokenizer::get_offset_until_terminated_char(unsigned char terminated, int start_offset) -> int

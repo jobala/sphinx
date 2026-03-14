@@ -18,7 +18,8 @@ enum class TokenType : std::uint8_t {
   IDENTIFIER,
 
   //  Symbol
-  STAR
+  STAR,
+  COMMA,
 };
 
 namespace Type
@@ -30,7 +31,7 @@ inline TokenType from_string(std::string token)
   std::ranges::transform(token, token.begin(), [](unsigned char letter) { return std::toupper(letter); });
 
   static const std::unordered_map<std::string, TokenType> keywords = {
-      {"SELECT", TokenType::SELECT}, {"FROM", TokenType::FROM}, {"*", TokenType::STAR}};
+      {"SELECT", TokenType::SELECT}, {"FROM", TokenType::FROM}, {"*", TokenType::STAR}, {",", TokenType::COMMA}};
 
   auto iter = keywords.find(token);
   return iter != keywords.end() ? iter->second : TokenType::IDENTIFIER;
@@ -47,7 +48,7 @@ struct Literal
   static bool is_symbol_start(char letter) { return is_symbol(letter); }
   static bool is_symbol(char letter)
   {
-    std::set<unsigned char> symbols{'*'};
+    std::set<unsigned char> symbols{'*', ','};
     return symbols.contains(letter);
   }
 
