@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <cctype>
+#include <set>
 #include <string>
 #include <unordered_map>
 
@@ -13,32 +15,41 @@ enum class TokenType : std::uint8_t {
   LONG,
   DOUBLE,
   STRING,
-  IDENTIFIER
+  IDENTIFIER,
+
+  //  Symbol
+  STAR
 };
 
 namespace Type
 {
-inline TokenType from_string(std::string &token)
-{
-  // uppercase token
-  for (auto &tkn : token)
-  {
-    toupper(tkn);
-  }
 
-  static const std::unordered_map<std::string, TokenType> keywords = {{"SELECT", TokenType::SELECT},
-                                                                      {"FROM", TokenType::FROM}};
+inline TokenType from_string(std::string token)
+{
+
+  std::ranges::transform(token, token.begin(), [](unsigned char letter) { return std::toupper(letter); });
+
+  static const std::unordered_map<std::string, TokenType> keywords = {
+      {"SELECT", TokenType::SELECT}, {"FROM", TokenType::FROM}, {"*", TokenType::STAR}};
 
   auto iter = keywords.find(token);
   return iter != keywords.end() ? iter->second : TokenType::IDENTIFIER;
 }
 
 } // namespace Type
+
 struct Literal
 {
   static bool is_number_start(unsigned char letter) { return std::isdigit(letter) != 0 || letter == '.'; }
   static bool is_identifier_start(char letter) { return std::isalpha(letter) != 0 || letter == '`'; }
   static bool is_char_start(char letter) { return letter == '\'' || '"' == letter; }
+
+  static bool is_symbol_start(char letter) { return is_symbol(letter); }
+  static bool is_symbol(char letter)
+  {
+    std::set<unsigned char> symbols{'*'};
+    return symbols.contains(letter);
+  }
 
   static bool is_identifier_part(char letter)
   {

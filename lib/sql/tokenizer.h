@@ -14,6 +14,7 @@ class SqlTokenizer
   int skip_whitespace(int start_offset);
   int get_offset_until_terminated_char(unsigned char terminated, int start_offset);
   Token scan_identifier(int start_offset);
+  Token scan_symbol(int start_offset);
 
 public:
   SqlTokenizer(const std::string &sql);

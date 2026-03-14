@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "token.h"
 #include "tokenizer.h"
 
-SqlTokenizer::SqlTokenizer(const std::string &sql) : sql_(sql) {}
+SqlTokenizer::SqlTokenizer(const std::string &sql) : sql_(sql) { offset_ = 0; }
 
 auto SqlTokenizer::tokenize() -> std::vector<Token>
 {
@@ -33,7 +34,14 @@ auto SqlTokenizer::next_token() -> std::optional<Token>
   if (Literal::is_identifier_start(sql_[offset]))
   {
     auto token = scan_identifier(offset);
-    offset = token.end_offset_;
+    offset_ = token.end_offset_;
+    return token;
+  }
+
+  if (Literal::is_symbol_start(sql_[offset]))
+  {
+    auto token = scan_symbol(offset);
+    offset_ = token.end_offset_;
     return token;
   }
 
@@ -49,9 +57,13 @@ auto SqlTokenizer::next_token() -> std::optional<Token>
 
   return std::nullopt;
 }
+
 auto SqlTokenizer::skip_whitespace(int start_offset) -> int
 {
   auto end_offset = start_offset;
+  auto curr = sql_[end_offset];
+  std::cout << curr;
+
   while (end_offset < (int)sql_.size() && sql_[end_offset] == ' ')
   {
     end_offset += 1;
@@ -64,7 +76,7 @@ auto SqlTokenizer::scan_identifier(int start_offset) -> Token
   if (offset_ < (int)sql_.size() && '`' == sql_[offset_])
   {
     auto end_offset = get_offset_until_terminated_char('`', start_offset);
-    auto text = sql_.substr(start_offset, end_offset);
+    auto text = sql_.substr(start_offset, end_offset - start_offset);
     return {text, TokenType::IDENTIFIER, end_offset + 1};
   }
 
@@ -74,7 +86,20 @@ auto SqlTokenizer::scan_identifier(int start_offset) -> Token
     end_offset += 1;
   }
 
-  auto text = sql_.substr(start_offset, end_offset);
+  auto text = sql_.substr(start_offset, end_offset - start_offset);
+  auto token_type = Type::from_string(text);
+  return {text, token_type, end_offset + 1};
+}
+
+auto SqlTokenizer::scan_symbol(int start_offset) -> Token
+{
+  auto end_offset = start_offset;
+  while (end_offset < (int)sql_.size() && Literal::is_symbol(sql_[end_offset]))
+  {
+    end_offset += 1;
+  }
+
+  auto text = sql_.substr(start_offset, end_offset - start_offset);
   auto token_type = Type::from_string(text);
   return {text, token_type, end_offset + 1};
 }
