@@ -37,7 +37,6 @@ TEST(Tokenizer, tokenize_projected_sql_string)
   ASSERT_EQ(6, tokens.size());
   for (int i = 0; i < (int)tokens.size(); i++)
   {
-    std::cout << tokens[i].text_ << "\n";
     ASSERT_EQ(res[i], tokens[i].text_);
     ASSERT_EQ(token_types[i], tokens[i].type_);
   }

@@ -26,7 +26,7 @@ auto SqlTokenizer::tokenize() -> std::vector<Token>
 auto SqlTokenizer::next_token() -> std::optional<Token>
 {
   auto offset = skip_whitespace(offset_);
-  if (offset > (int)sql_.length())
+  if (offset > (int)sql_.length() - 1)
   {
     return std::nullopt;
   }
@@ -61,8 +61,6 @@ auto SqlTokenizer::next_token() -> std::optional<Token>
 auto SqlTokenizer::skip_whitespace(int start_offset) -> int
 {
   auto end_offset = start_offset;
-  auto curr = sql_[end_offset];
-  std::cout << curr;
 
   while (end_offset < (int)sql_.size() && sql_[end_offset] == ' ')
   {
@@ -111,5 +109,11 @@ auto SqlTokenizer::get_offset_until_terminated_char(unsigned char terminated, in
   {
     end_offset += 1;
   }
+
+  if (end_offset >= (int)sql_.size())
+  {
+    throw std::runtime_error("Unterminated delimited identifier");
+  }
+
   return end_offset;
 }
